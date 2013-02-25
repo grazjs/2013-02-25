@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>graz.js 2013-02-25</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+<section>
+	<h1>CouchDB</h1>
+	<h3>relax</h3>
+</section>
+
+<section>
+	<pre>
+<strong>Apache CouchDB™</strong> is a database
+that uses <strong>JSON</strong> for documents,
+<strong>JavaScript</strong> for <strong>MapReduce</strong> queries,
+and regular <strong>HTTP</strong> for an <strong>API</strong>
+	</pre>
+</section>
+
+
+<section>
+	<section>
+		<h2>is couch running?</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+GET / HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 200 OK
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{"couchdb":"Welcome","version":"1.2.0"}
+		</pre>
+	</section>
+</section>
+
+
+<section>
+	<section>
+		<h2>create database</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+PUT /jsug HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 201 Created
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+Location: http://localhost:5984/jsug
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{"ok":true}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>create document</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+POST /jsug HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+Content-Type: application/json
+
+{"number": 0, "de": "Null"}
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 201 Created
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+Location: http://localhost:5984/jsug/3fee5f23024e5720e6021eccac000970
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{
+    "ok":true,
+    "id":"3fee5f23024e5720e6021eccac000970",
+    "rev":"1-2766f2bbb8f3e74efb215559bd11eff0"
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>create document with specific id</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+PUT /jsug/myUniqueId HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+Content-Type: application/json
+
+{"with": "a body"}
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 201 Created
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+Location: http://localhost:5984/jsug/myUniqueId
+ETag: "1-9ad2d34fe653179c5fe9c7a370dd112a"
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{
+    "ok":true,
+    "id":"myUniqueId",
+    "rev":"1-9ad2d34fe653179c5fe9c7a370dd112a"
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>get document</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+GET /jsug/myUniqueId HTTP/1.1
+Host: localhost:5984
+Accept: */*
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 200 OK
+Server: CouchDB/1.2.1 (Erlang OTP/R15B)
+ETag: "1-9ad2d34fe653179c5fe9c7a370dd112a"
+Content-Type: text/plain; charset=utf-8
+Cache-Control: must-revalidate
+
+{
+    "_id":"myUniqueId",
+    "_rev":"1-9ad2d34fe653179c5fe9c7a370dd112a",
+    "with": "a body"
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>update document</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+PUT /jsug/3fee5f23024e5720e6021eccac000970 HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+Content-Type: application/json
+
+{
+    "_rev":"1-2766f2bbb8f3e74efb215559bd11eff0",
+    "number": 0,
+    "de": "Null",
+    "en": "Zero"
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 201 Created
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+Location: http://localhost:5984/jsug/3fee5f23024e5720e6021eccac000970
+ETag: "2-3a87fe721a25d90b2e95df6bc9210df5"
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{
+    "ok":true,
+    "id":"3fee5f23024e5720e6021eccac000970",
+    "rev":"2-3a87fe721a25d90b2e95df6bc9210df5"
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>delete document</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+DELETE /jsug/3fee5f23024e5720e6021eccac000970
+  ?rev=2-3a87fe721a25d90b2e95df6bc9210df5 HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 200 OK
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+ETag: "3-8252ac89e81bfd0f476fa0202f20a408"
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{
+    "ok":true,
+    "id":"3fee5f23024e5720e6021eccac000970",
+    "rev":"3-8252ac89e81bfd0f476fa0202f20a408"
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>bulk operation</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+POST http://localhost:5984/jsug/_bulk_docs HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+Content-Type: application/json
+
+{
+    "docs":[{
+        "number":0,
+        "de": "Null",
+        "en": "Zero"
+    },{
+        "number":1,
+        "de":"Eins",
+        "en":"One"
+    }]
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 201 Created
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+[{
+    "ok":true,
+    "id":"3fee5f23024e5720e6021eccac000bc6",
+    "rev":"1-a5c00b8899bd3d3913590c9c1af02927"
+},{
+    "ok":true,
+    "id":"3fee5f23024e5720e6021eccac0013d7",
+    "rev":"1-29f0888b26ca09430f64713cc22b88ce"
+}]
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>get all documents</h2>
+	</section>
+
+	<section>
+		<h3>request</h3>
+		<pre>
+GET /jsug/_all_docs HTTP/1.1
+Host: localhost:5984
+Accept: application/json
+		</pre>
+	</section>
+
+	<section>
+		<h3>response</h3>
+		<pre>
+HTTP/1.1 200 OK
+Server: CouchDB/1.2.0 (Erlang OTP/R15B)
+ETag: "VFINB5HANASVSUQM43MOT84I"
+Content-Type: application/json
+Cache-Control: must-revalidate
+
+{
+    "total_rows":3,
+    "offset":0,
+    "rows":[{
+        "id":"3fee5f23024e5720e6021eccac000bc6",
+        "key":"3fee5f23024e5720e6021eccac000bc6",
+        "value":{"rev":"1-a5c00b8899bd3d3913590c9c1af02927"}
+    }, {
+        "id":"3fee5f23024e5720e6021eccac0013d7",
+        "key":"3fee5f23024e5720e6021eccac0013d7",
+        "value":{"rev":"1-29f0888b26ca09430f64713cc22b88ce"}
+    }, {
+        "id":"myUniqueId",
+        "key":"myUniqueId",
+        "value":{"rev":"1-9ad2d34fe653179c5fe9c7a370dd112a"}
+    }]
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>
+			<a href="http://localhost:5984/_utils">
+				&nbsp;Futon&nbsp;
+			</a>
+		</h2>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>design documents</h2>
+		<pre>
+{
+		"_id": "_design/name",
+		...
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>shows</h3>
+		<pre>
+{
+    ...
+    shows: {
+        name: function(doc, req) {
+            return '&lt;h1&gt;' + doc._id + '&lt;/h1&gt;';
+        }
+    }
+    ...
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>views</h3>
+		<pre>
+{
+    ...
+    views: {
+        name: {
+            map: function(doc) {
+                emit(doc.id, doc);
+            },
+            reduce: function(keys, values, rereduce) {
+                if (rereduce){
+                    return sum(values);
+                } else {
+                    return values.lenght;
+                }
+            }
+        }
+    }
+    ...
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>list</h3>
+		<pre>
+{
+    ...
+    lists: {
+        name: function(head, req) {
+        		var html = "";
+        		var row;
+        		while (row = getRow()) {
+                html += JSON.stringify(row);
+        		}
+        		return html;
+        }
+    }
+    ...
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>validate</h3>
+		<pre>
+{
+    ...
+    validate_doc_update: function(newDoc, oldDoc, userCtx, secObj) {
+        throw({forbidden: 'STOP!'});
+    }
+    ...
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>filter</h3>
+		<pre>
+{
+    ...
+    filters: {
+        name: function(doc, req) {
+            return true;
+        }
+    }
+}
+		</pre>
+	</section>
+
+	<section>
+		<h3>rewrite</h3>
+		<pre>
+{
+    ...
+    rewrites: [{
+        from: "/",
+        to: "index.html"
+    }]
+}
+		</pre>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>
+			<a href="http://couchapp.org/">
+				&nbsp;CouchApp&nbsp;
+			</a>
+		</h2>
+	</section>
+	<section>
+		<h3>config vhost</h3>
+		<pre>
+/etc/couchdb/local.ini
+
+[vhosts]
+timex.couchdb:5980 = /timex/_design/app/_rewrite
+		</pre>
+	</section>
+
+</section>
+
+<section>
+	<h2>_changes</h2>
+</section>
+
+<section>
+	<h2>Links</h2>
+	<ul>
+		<li><a href="http://couchdb.apache.org/">CouchDB</a></li>
+		<li><a href="http://couchdb.readthedocs.org/">Manual</a></li>
+	</ul>
+</section>
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>TimeX</title>
+  <link rel="stylesheet" href="layout.css" type="text/css">
+ </head>
+ <body>
+  <script type="text/mustache" id="login">
+    <form id="login" class="login">
+      <input name="name" placeholder="Name" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <div class="msg"></div>
+      <button>submit</button>
+    </form>
+  </script>
+
+  <script type="text/mustache" id="info">
+    {{#name}}Welcome <b>{{name}}</b> <button>Logout</button>{{/name}}
+    {{^name}}not logged in{{/name}}
+  </script>
+
+  <script type="text/mustache" id="start">
+    <a href="#entry">Zeit erfassen</a>
+    <a href="#changePassword">Passwort ändern</a>
+
+    {{#admin}}
+    <h1>manage</h1>
+    <a href="#project">Projects</a>
+    {{/admin}}
+  </script>
+
+  <script type="text/mustache" id="projects">
+    <table>
+    <thead>
+      <tr><th>Name</th><th>Customer</th><th>Date</th><th>&nbsp;</th></tr>
+    </thead>
+    <tbody>
+    {{#projects}}
+      <tr id="{{_id}}">
+        <td>{{name}}</td><td>{{customer}}</td><td>{{due}}</td>
+        <td><button>edit</button></td>
+      </tr>
+    {{/projects}}
+    </tbody>
+    <tfoot>
+      <tr><td colspan="4">
+        <button>add new project</button>
+      </td></tr>
+    </tfoot>
+    </table>
+  </script>
+
+  <script type="text/mustache" id="editProject">
+   <form id="{{_id}}" class="project">
+     <input type="hidden" name="_rev" value="{{_rev}}" />
+     <input type="hidden" name="type" value="project" />
+
+     <label>Name</label>
+     <input name="name" value="{{name}}" required />
+
+     <label>Beschreibung</label>
+     <textarea name="desc">{{desc}}</textarea>
+
+     <label>Kunde</label>
+     <input name="customer" value="{{customer}}" />
+
+     <label>Fertigstellungstermin</label>
+     <input type="date" name="due" value="{{due}}" />
+     <button>save</button>
+   </form>
+  </script>
+
+  <script type="text/mustache" id="categories">
+    <table>
+    <thead>
+      <tr><th>Name</th><th>Date</th><th>Volumen</th><th>&nbsp;</th></tr>
+    </thead>
+    <tbody>
+    {{#categories}}
+      <tr id="{{_id}}">
+        <td>{{name}}</td><td>{{due}}</td><td>{{capacity}} h</td>
+        <td><button>edit</button></td>
+      </tr>
+    {{/categories}}
+    </tbody>
+    <tfoot>
+      <tr><td colspan="4">
+        <button>add new category</button>
+      </td></tr>
+    </tfoot>
+
+    </table>
+  </script>
+
+  <script type="text/mustache" id="editCategory">
+   <form id="{{_id}}" class="category">
+    <input name="_rev" type="hidden" value="{{_rev}}" />
+    <input name="type" type="hidden" value="category" />
+    <input name="project" type="hidden" value="{{project}}">
+    <label>Name</label>
+    <input name="name" value="{{name}}" required />
+    <label>Beschreibung</label>
+    <textarea name="desc">{{desc}}</textarea>
+    <label>Fertigstellungstermin</label>
+    <input name="due" type="date" value="{{due}}" />
+    <label>Volumen (in h)</label>
+    <input name="capacity" value="{{capacity}}" />
+    <button>save</button>
+   </form>
+  </script>
+
+  <script type="text/mustache" id="entry">
+   <form id="{{_id}}" class="entry">
+    <input name="_rev" type="hidden" value="{{_rev}}" />
+    <input name="type" type="hidden" value="entry" />
+    <input name="user" type="hidden" value="{{user}}" />
+    <input name="start" placeholder="start" data-value="{{start}}" />
+    <input name="end" placeholder="end" data-value="{{end}}" />
+    <input class="duration" disabled />
+    <select name="project">
+      <option value=""></option>
+      {{#projects}}
+      <option value="{{key}}">{{value}}</option>
+      {{/projects}}
+    </select>
+    
+    <select name="category">
+      <option value=""></option>
+      {{#categories}}
+      <option value="{{key}}">{{value}}</option>
+      {{/categories}}
+    </select>
+    <input name="text" placeholder="text" value="{{text}}" />
+    <button class="save">save</button>
+    <button class="delete">X</button>
+   </form>
+  </script>
+
+  <script type="text/mustache" id="changePassword">
+    <form class="changePassword">
+      <input name="newPassword1" type="password" placeholder="New Password" />
+      <input name="newPassword2" type="password" placeholder="Verify New Password" />
+      <label></label>
+      <button>save</button>
+    </form>
+  </script>
+
+  <div class="top"><a href="#">TIME X</a></div>
+  <div class="nav"></div>
+  <div id="body"></div>
+  <div id="notify"></div>
+
+  <script src="mustache.js"></script>
+  <script src="moment.js"></script>
+
+  <script src="timeX.js"></script>
+  <script src="init.js"></script>
+ </body>
+</html>

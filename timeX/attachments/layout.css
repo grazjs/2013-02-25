@@ -1,0 +1,65 @@
+.top {
+    font-size: 32px;
+}
+.top a {
+    text-decoration: none;
+    color: #000;
+}
+
+.nav {
+    text-align: right;
+}
+
+.nav > button {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#body > a {
+    display: block;
+}
+
+table {
+    width: 100%;
+    border: 1px solid black;
+}
+
+form {
+    border: 1px solid black;
+}
+
+form.login > * {
+    display: block;
+}
+form.login > div.msg {
+    color: red;
+}
+
+form.project > * {
+    display: block;
+}
+
+form.category > * {
+    display: block;
+}
+
+form.entry > * {
+    display: inline-block;
+}
+form.changePassword > * {
+    display: block;
+}
+
+#notify {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+#notify div {
+    background: #fee;
+    border: 1px solid #888;
+    padding: 2px 5px;
+    margin: 1px;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "graz.js_2013-02-17",
+  "version": "0.0.0",
+  "description": "Introduction to CouchDB",
+  "dependencies": {
+    "send": "~0.1.0",
+    "couchapp": "~0.9.1"
+  },
+  "private": true,
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "exit 1"
+  },
+  "license": "UNLICENSE"
+}
