@@ -17,4 +17,5 @@
 - [AppFog](https://www.appfog.com/)
 - [jQuery Europe 2013 22nd/23rd February 2013](http://events.jquery.org/2013/eu/)
 - [DailyJS](http://dailyjs.com/)
+- [Git: From Zero to Hero - Mit Tim Berglund (21/22.5.2013 HTL Spengergasse)](http://www.zero2hero.at/blog/2013/02/19/gitfromzero2hero/)
 - [SlickGrid](https://github.com/mleibman/SlickGrid)
